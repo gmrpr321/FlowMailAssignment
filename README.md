@@ -24,35 +24,50 @@
    `npm run dev`
 7. Make calls from FrontEnd !!
 
+## Flow of Execution 
+<img src="https://i.ibb.co/Twq6X66/scale.png" width="600" height="700">
+
 ## Logic behind flowmail - Frontend 
-1. To make sure user has complete freedom to customizations, custom nodes were created with reactflow library to perform a specific action
+ To make sure user has complete freedom to customizations, custom nodes were created with reactflow library to perform a specific action
 #### StartNode
-  ![image]()
-  - It is a special node that cannot be deleted and there can exist only one startNode in a canvas. It denotes the start of execution of flow operations
-  - StartNode accepts a list of emails separated by a newline to send automated messages.
+
+<img src="https://i.ibb.co/G2bvxRD/start-Node.png" width="300" height="180">
+
+- It is a special node that cannot be deleted, and there can exist only one StartNode in a canvas. It denotes the start of execution of flow operations.
+- StartNode accepts a list of emails separated by a newline to send automated messages:
     ```
     emailid1@gmail.com
     emailid2@gmail.com
     emailid#@gmail.com
-    .
-    .
+    ...
     ```
-  - Nodes that are not children of StartNode will not be executed, it is because the flow execution follows a Tree structure with startNode as root.
+- Nodes that are not children of StartNode will not be executed because the flow execution follows a Tree structure with StartNode as root.
+
+  
 #### ActionNode
-  ![image]()
-    - ActionNode denotes an action that can be executed in the flowChart, each action node takes in a label to be displayed and an Email to send
-    - Actions are executed only to email IDs that belong to the specific logic branch
+
+<img src="https://i.ibb.co/ftS0r2G/action-Node.png" width="300" height="180">
+
+- ActionNode denotes an action that can be executed in the flowChart. Each action node takes in a label to be displayed and an Email to send.
+- Actions are executed only to email IDs that belong to the specific logic branch.
+
 #### DelayNode
-  ![image]()
-    - Used to simulate a delay before an action,can only precede an ActionNode
-    - Delay is specified in This format {Days,Hours,Minutes}
-    - The child action to delayNode will be performed only after this duration ends.
+
+<img src="https://i.ibb.co/BctdyFC/delay-Node.png" width="300" height="180">
+
+- Used to simulate a delay before an action and can only precede an ActionNode.
+- Delay is specified in this format: {Days, Hours, Minutes}.
+- The child action to DelayNode will be performed only after this duration ends.
+
 #### DecisionNode
-  ![image]()
-    - Facilitates conditional branching and logic into flowcharts
-    - Takes in a Decision label, True label, and False label
-    - Nodes connected to DecisionNode have a special edge that describes the true and false flow of execution
-    - Chaining of subsequent DecisionNodes is not supported in this version.(Coming soon !).
+
+<img src="https://i.ibb.co/txxSrbF/decision-Node.png" width="300" height="180">
+
+- Facilitates conditional branching and logic into flowcharts.
+- Takes in a Decision label, True label, and False label.
+- Nodes connected to DecisionNode have a special edge that describes the true and false flow of execution.
+- Chaining of subsequent DecisionNodes is not supported in this version. (Coming soon!)
+
     
  #### FlowChart to JSON Representation
     - Below is the JSON Representation of the flowchart in canvas, this is updated every time a change occurs in Canvas.
@@ -79,14 +94,45 @@
         "content": "email Content",
         "responses": { "Yes": "EOG", "No": "EOG" }   //EOG : End of Graph, specifies a leaf node
       },
-      {
-        "action_id": "a3",
-        "delay": "",
-        "content": "email Content",
-        "responses": { "Yes": "EOG", "No": "EOG" }
-      }
       ]
      }
     }
-   ```
+    ```
+## Logic behind Flowmail - Backend
+#### GET /conditionalYes/:activity_id/:emailId
+
+- **Description:** Endpoint to handle the True condition made by user interaction to perform subsequent operations.
+- **Parameters:**
+  - `activity_id`: The ID of the activity.
+  - `emailId`: The email ID associated with the activity.
+- **Functionality:**
+  - Retrieves the activity object based on the provided `activity_id`.
+  - Gets the ID of the subsequent activity for the "yes" response.
+  - Executes the subsequent action if it exists and is not "EOG".
+
+#### GET /conditionalNo/:activity_id/:emailId
+
+- **Description:** Endpoint to handle the False condition made by user interaction to perform subsequent operations.
+- **Parameters:**
+  - `activity_id`: The ID of the activity.
+  - `emailId`: The email ID associated with the activity.
+- **Functionality:**
+  - Retrieves the activity object based on the provided `activity_id`.
+  - Gets the ID of the subsequent activity for the "no" response.
+  - Executes the subsequent action if it exists and is not "EOG".
+
+#### POST /createFlow
+
+- **Description:** Endpoint to create and initiate flow execution based on provided flow data.
+- **Request Body:** 
+  - Flow data containing information about the flow and activities.
+- **Functionality:**
+  - Deletes all existing instances of flows and activities.
+  - Saves the provided flow data to the database.
+  - Creates activity models for users based on the flow data.
+  - Initiates flow execution by executing the first action.
+
+
+
+
     
