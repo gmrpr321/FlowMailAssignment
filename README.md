@@ -70,7 +70,7 @@
 
     
  #### FlowChart to JSON Representation
-    - Below is the JSON Representation of the flowchart in canvas, this is updated every time a change occurs in Canvas.
+- Below is the JSON Representation of the flowchart in canvas, this is updated every time a change occurs in Canvas.
     ```  
     {
     "ids": ["e1", "e2", "e3"], //Email IDs collected from Start Node
