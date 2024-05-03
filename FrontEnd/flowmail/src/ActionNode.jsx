@@ -4,6 +4,7 @@ import ActionForm from "./ActionForm";
 const handleStyle = { left: 10 };
 
 function ActionNode({ data, isConnectable }) {
+  //updates the data prop to include email content
   const [showFormButton, setShowFormButton] = useState(false);
   const [actionName, setActionName] = useState("Action Node");
   function handleButtonChange() {

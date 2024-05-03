@@ -3,6 +3,7 @@ const DelayForm = (props) => {
   function handleFormSubmit(event) {
     props.buttonChange();
     event.preventDefault();
+    //used to handle delay name changes (collected via forms)
     props.changeDelayName(
       event.target.elements.days.value,
       event.target.elements.hours.value,

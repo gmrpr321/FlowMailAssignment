@@ -5,6 +5,7 @@ const handleStyle = { left: 10 };
 
 function StartNode({ data, isConnectable }) {
   const [showFormButton, setShowFormButton] = useState(false);
+  //handles hide button
   function handleButtonChange() {
     setShowFormButton((val) => !val);
   }

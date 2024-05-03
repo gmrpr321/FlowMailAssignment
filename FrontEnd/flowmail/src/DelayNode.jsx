@@ -8,6 +8,7 @@ function DelayNode({ data, isConnectable }) {
     setShowFormButton((val) => !val);
   }
   function handleDelayNameChange(days, hrs, mins) {
+    //Delay value is in the format  "{number}D? {number}H {number}M"
     let res = "";
     if (days != "") res += days + "D ";
     if (hrs != "") res += hrs + "H ";

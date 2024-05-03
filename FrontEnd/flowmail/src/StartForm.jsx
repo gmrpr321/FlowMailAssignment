@@ -4,6 +4,7 @@ const StartForm = (props) => {
     event.preventDefault();
     props.buttonChange();
     console.log(event.target.elements);
+    //collects email Ids to send to server
     props.data.emailIds = event.target.elements.Emailids.value.split(/\s+/);
   }
 

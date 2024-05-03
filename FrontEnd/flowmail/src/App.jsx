@@ -16,11 +16,13 @@ import NormalEdge from "./NormalEdge";
 import DecisionEdge from "./DecisionEdge";
 import JSONModule from "./util";
 
+//change the BASE_URL when setting up locally if needed
 const BASE_URL = "http://localhost:3002";
 
 const rfStyle = {};
 let nodeId = 1;
 
+//toSENDJSON specifies the object format of a reactflow diagram
 const toSendJSON = {
   ids: [],
   actions: {
@@ -28,6 +30,7 @@ const toSendJSON = {
     actions: [],
   },
 };
+//defalut node in the graph for entering a list of emails is StartNode
 const initialNodes = [
   {
     id: "0",
@@ -39,13 +42,13 @@ const initialNodes = [
 
 const nodeTypes = {
   startnode: StartNode,
-  delaynode: DelayNode,
-  actionnode: ActionNode,
-  decisionnode: DecisionNode,
+  delaynode: DelayNode, //adds delay before an action
+  actionnode: ActionNode, //performs a decision ie,sending email
+  decisionnode: DecisionNode, //conditional branching upon user behaviour
 };
 const edgeTypes = {
-  normaledge: NormalEdge,
-  decisionedge: DecisionEdge,
+  normaledge: NormalEdge, //edge with delete button
+  decisionedge: DecisionEdge, //edge with Truth and false labels
 };
 
 function App() {
@@ -87,6 +90,7 @@ function App() {
     }
   }
   function addNewNode(type) {
+    //function to add a new node to the graph with the specified type
     const curCount = nodeId;
     nodeId += 1;
     const x = 100;
@@ -125,6 +129,7 @@ function App() {
     console.log(newNode);
     setNodes((nodes) => [...nodes, newNode]);
   }
+  //calling updateJSON() whenever a change is detected in graph
   const onNodesChange = useCallback(
     (changes) =>
       setNodes((nds) => {
@@ -144,6 +149,7 @@ function App() {
   );
   const onConnect = useCallback(
     (connection) => {
+      //deciding on the type of edge via connecting nodes
       console.log(connection);
       let edgeType = "normaledge";
       let labelName = "";
@@ -173,9 +179,7 @@ function App() {
     },
     [setEdges, nodes]
   );
-  //
 
-  //
   return (
     <div
       style={{ height: "100vh", width: "100vw" }}
