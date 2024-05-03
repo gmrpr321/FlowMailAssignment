@@ -1,0 +1,31 @@
+{
+  "ids": ["e1", "e2", "e3"],
+  "actions": {
+    "start": {
+      "ids": [],
+      "action_id": "0",
+      "delay": "",
+      "responses": { "Yes": "a1", "No": "a2" }
+    },
+    "actions": [
+      {
+        "action_id": "a1",
+        "delay": "",
+        "content": "email Content",
+        "responses": { "Yes": "a2", "No": "a3" }
+      },
+      {
+        "action_id": "a2",
+        "delay": "",
+        "content": "email Content",
+        "responses": { "Yes": "EOG", "No": "EOG" }
+      },
+      {
+        "action_id": "a3",
+        "delay": "",
+        "content": "email Content",
+        "responses": { "Yes": "EOG", "No": "EOG" }
+      }
+    ]
+  }
+}
