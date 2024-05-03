@@ -1,28 +1,24 @@
-//initiate flow execution
-//fun nextActionbyID => if actions.ID.responses.get("no") == EOG but yes is true, call executeActionByID of yes and modifies responseTime
-//if actions.ID.responses.get("yes") == EOG return (reached the leaf node) and modifies responseTime
-// if actions.ID.responses.get("yes") and no , handle this at endpt
-//fun performDelaybyID => modifies requestTime, performs delay
-// fun excetueActionByID => finds the activity object, calls performDelayByID, sends email ,calls nextAction
-
 const BASE_URL = "http://localhost:3002";
 const nodemailer = require("nodemailer");
+//Email in transporterData contains From email details, To email details are sent from frontEnd
 const transporterData = {
   service: "Gmail",
   host: "smtp.gmail.com",
   port: 465,
   service: "Gmail",
   auth: {
-    user: "flowmaildemo@gmail.com",
-    pass: "iifi aynx hkcm esuv",
+    user: "flowmaildemo@gmail.com", //from gmail
+    pass: "iifi aynx hkcm esuv", //app passcode
   },
 };
 const DatabaseUtil = require("./databaseUtil");
 const ExecuteUtil = {
   operations: (function () {
     const _sendMail = async (to, activity_id, text, isConditional) => {
+      //function to send a mail to a specific email, also sends interactive elements if the type of mail is conditional
       let updatedText = text;
       if (isConditional) {
+        //links for conditional emails
         updatedText += `\n Yes : ${BASE_URL}/conditionalYes/${activity_id}/${to}\n No : ${BASE_URL}/conditionalNo/${activity_id}/${to}`;
       }
       const transporter = nodemailer.createTransport(transporterData);
@@ -40,6 +36,8 @@ const ExecuteUtil = {
       });
     };
     const _executeDelay = async (time) => {
+      //function to execte a delay node that comes before an action, time is
+      // given in "{number}D? {number}H? {number}M" format
       const regex = /(\d+)(D\s*)?(\d+)?(H\s*)?(\d+)?M/;
       const match = time.match(regex);
 
@@ -62,12 +60,15 @@ const ExecuteUtil = {
       return new Date();
     };
     const _getFlowActionByID = (flow, id) => {
+      //function to get a specific flowaction from a list of actions in flow instance
       const actions = flow.actions.actions;
       const result = actions.find((action) => action.action_id == id);
       return result;
     };
     // const _nextActionByID = async () => {};
     const _executeActionByID = async (action_id, emailID) => {
+      //given a action_id and emailid, retrieve that action from flow instance and perform it for this specific email
+      //also performs delays and updates user entries
       const flowObj = await DatabaseUtil.flowUtil.getFlow();
       const action = _getFlowActionByID(flowObj, action_id);
       const time_to_delay = action.delay.trim();
@@ -102,6 +103,9 @@ const ExecuteUtil = {
       }
     };
     const _executeFirstAction = async () => {
+      //function to execute the starting action, action execution follows DAG pattern and
+      // this function repeatedly calls subsequent actions (clild nodes) if available
+      //conditional nodes are handled at endpoint
       const flowDoc = await DatabaseUtil.flowUtil.getFlow();
       console.log(flowDoc.actions.start.responses);
       if (flowDoc.actions.start.responses.get("yes") != "EOG") {

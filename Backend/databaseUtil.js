@@ -4,14 +4,17 @@ const Flow = require("./models/FlowModel");
 const DatabaseUtil = {
   flowUtil: (function () {
     const _saveFlow = async (data) => {
+      //save a flow instance
       const doc = new Flow(data);
       await doc.save();
     };
     const _getFlow = async () => {
+      //get a flow instance
       const doc = await Flow.findOne({});
       return doc;
     };
     const _deleteAllInstance = async () => {
+      //delete all flow instances
       try {
         const result = await Flow.deleteMany({});
         console.log(`${result.deletedCount} instances deleted.`);
@@ -27,13 +30,15 @@ const DatabaseUtil = {
   })(),
   activityUtil: (function () {
     const _getActivityFromID = async (emailId) => {
+      //returns the activity instance with this specific emailID
       const doc = await Activity.findOne({ emailId: emailId });
       return doc;
     };
     const _setRequestTimeOfActivity = async (emailId) => {
+      //used when delay node is expired, the Request time of Activity instance
+      //is updated to current time
       try {
         const doc = await Activity.findOne({ emailId: emailId });
-
         if (!doc) {
           console.error("Activity document not found for emailId:", emailId);
           return;
@@ -48,6 +53,7 @@ const DatabaseUtil = {
     };
 
     const _deleteAllInstance = async () => {
+      //deletes all instances of activity
       try {
         const result = await Activity.deleteMany({});
         console.log(`${result.deletedCount} instances deleted.`);
@@ -56,6 +62,7 @@ const DatabaseUtil = {
       }
     };
     const _createActivityFromFlow = async (data) => {
+      //populates the Activity collection from Flow instance
       const docs = [];
       console.log(data, typeof data);
       const emailIds = data.ids;

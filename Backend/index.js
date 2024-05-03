@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const DatabaseUtil = require("./databaseUtil");
 const ExecuteUtil = require("./executeUtil");
 dotenv.config();
+
 const PORT = process.env.PORT | 3002;
 const app = express();
 app.use(cors());
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use(morgan("[:date[web]] :method :url :status :total-time ms"));
 
 app.get("/conditionalYes/:activity_id/:emailId", async (req, res) => {
+  //Endpoint to handle the True condition made by user interaction to perform subsequent operations
   const activityId = req.params.activity_id;
   const emailId = req.params.emailId;
   const flowObj = await DatabaseUtil.flowUtil.getFlow();
@@ -27,12 +29,13 @@ app.get("/conditionalYes/:activity_id/:emailId", async (req, res) => {
   let trueActivity = null;
   if (activityObj) trueActivity = activityObj.responses.get("yes");
   if (trueActivity && trueActivity != "EOG")
-    ExecuteUtil.operations.executeActionByID(trueActivity, emailId);
+    ExecuteUtil.operations.executeActionByID(trueActivity, emailId); //execute the true activity
   console.log(activityId, emailId);
   res.send(`Activity ID: ${activityId}, Email ID: ${emailId}`);
 });
 
 app.get("/conditionalNo/:activity_id/:emailId", async (req, res) => {
+  //Endpoint to handle the False condition made by user interaction to perform subsequent operations
   const activityId = req.params.activity_id;
   const emailId = req.params.emailId;
   const flowObj = await DatabaseUtil.flowUtil.getFlow();
@@ -46,7 +49,7 @@ app.get("/conditionalNo/:activity_id/:emailId", async (req, res) => {
   let falseActivity = null;
   if (activityObj) falseActivity = activityObj.responses.get("no");
   if (falseActivity && falseActivity != "EOG")
-    ExecuteUtil.operations.executeActionByID(falseActivity, emailId);
+    ExecuteUtil.operations.executeActionByID(falseActivity, emailId); //execute the false activity
   console.log(activityId, emailId);
   res.send(`Activity ID: ${activityId}, Email ID: ${emailId}`);
 });

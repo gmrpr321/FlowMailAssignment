@@ -15,6 +15,7 @@ export default function DecisionEdge({
   sourceHandleId,
   targetHandleId,
 }) {
+  //edge that will be used to connect a decision Node and other nodes
   const { setEdges } = useReactFlow();
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
