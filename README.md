@@ -25,7 +25,7 @@
 7. Make calls from FrontEnd !!
 
 ## Flow of Execution 
-<img src="https://i.ibb.co/Twq6X66/scale.png" width="600" height="700">
+<img src="https://i.ibb.co/Twq6X66/scale.png" width="700" height="700">
 
 ## Logic behind flowmail - Frontend 
  To make sure user has complete freedom to customizations, custom nodes were created with reactflow library to perform a specific action
