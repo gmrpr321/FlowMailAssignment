@@ -1,6 +1,6 @@
 # FlowMail
 ### An email marketing sequence via flowcharts
-![Image](https://i.ibb.co/TrwZyqv/introDoc.png)
+![Image](https://i.ibb.co/J7g6T4j/tees.png)
 ## Setup
 - First, clone this repo using git clone
 ### Frontend
