@@ -38,24 +38,29 @@ const ExecuteUtil = {
     const _executeDelay = async (time) => {
       //function to execte a delay node that comes before an action, time is
       // given in "{number}D? {number}H? {number}M" format
-      const regex = /(\d+)(D\s*)?(\d+)?(H\s*)?(\d+)?M/;
-      const match = time.match(regex);
+      const parts = time.split(" ");
 
-      let totalMilliseconds = 0;
+      let days = 0;
+      let hours = 0;
+      let minutes = 0;
 
-      if (match) {
-        const days = parseInt(match[1] || 0);
-        const hours = parseInt(match[2] || 0);
-        const minutes = parseInt(match[3] || 0);
-
-        totalMilliseconds =
-          days * 24 * 60 * 60 * 1000 +
-          hours * 60 * 60 * 1000 +
-          minutes * 60 * 1000;
-      }
+      parts.forEach((part) => {
+        if (part.includes("D")) {
+          days = parseInt(part.replace("D", ""));
+        } else if (part.includes("H")) {
+          hours = parseInt(part.replace("H", ""));
+        } else if (part.includes("M")) {
+          minutes = parseInt(part.replace("M", ""));
+        }
+      });
+      console.log(days, hours, minutes);
+      totalMilliseconds =
+        days * 24 * 60 * 60 * 1000 +
+        hours * 60 * 60 * 1000 +
+        minutes * 60 * 1000;
 
       // Delay execution using setTimeout
-      console.log(match, time, totalMilliseconds);
+      console.log(time, totalMilliseconds);
       await new Promise((resolve) => setTimeout(resolve, totalMilliseconds));
       return new Date();
     };
@@ -109,7 +114,6 @@ const ExecuteUtil = {
       const flowDoc = await DatabaseUtil.flowUtil.getFlow();
       console.log(flowDoc.actions.start.responses);
       if (flowDoc.actions.start.responses.get("yes") != "EOG") {
-        //No delay for start Action
         //get first action from start action
         const FirstActionID = flowDoc.actions.start.responses.get("yes");
         const firstAction = _getFlowActionByID(flowDoc, FirstActionID);
@@ -122,11 +126,13 @@ const ExecuteUtil = {
         //send the first mail
         const mailIdList = flowDoc.ids;
         console.log(FirstActionID, mailIdList);
+        await _executeDelay(firstAction.delay.trim());
         for (let i = 0; i < mailIdList.length; i++) {
           console.log(
             "attempt to send mail",
             flowDoc.actions.start.responses.get("yes")
           );
+          //execute delay
           //send email to all in mailIDList
           await _sendMail(
             mailIdList[i],
